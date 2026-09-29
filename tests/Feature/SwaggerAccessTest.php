@@ -11,6 +11,9 @@ class SwaggerAccessTest extends TestCase
         config(['l5-swagger.enabled' => true]);
 
         $this->get('/api/documentation')->assertOk();
+        $this->get('/docs?api-docs.json')
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/json');
     }
 
     public function test_swagger_uses_forwarded_https_urls_behind_railway_proxy(): void
