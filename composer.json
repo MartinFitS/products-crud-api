@@ -8,6 +8,7 @@
     "require": {
         "ext-gd": "*",
         "ext-mongodb": "^2.4",
+        "ext-zip": "*",
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.1",
         "darkaonline/l5-swagger": "^11.1",
