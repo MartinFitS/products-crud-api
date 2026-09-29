@@ -24,8 +24,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    'resend' => [
-        'key' => env('RESEND_KEY'),
+    'brevo' => [
+        'key' => env('BREVO_API_KEY'),
+        'endpoint' => env('BREVO_API_URL', 'https://api.brevo.com/v3/smtp/email'),
+        'timeout' => (int) env('BREVO_TIMEOUT', 10),
     ],
 
     'slack' => [
