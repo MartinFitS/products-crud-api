@@ -61,7 +61,10 @@ Endpoints disponibles:
 - `POST /api/auth/forgot-password`: envía un enlace de recuperación sin revelar si la cuenta existe.
 - `POST /api/auth/reset-password`: consume un token de un solo uso y revoca las sesiones existentes.
 
-Credencial local creada por el seeder del examen (solo desarrollo): `admin@example.com` / `Admin123!`.
+El administrador inicial se configura con `BOOTSTRAP_ADMIN_NAME`,
+`BOOTSTRAP_ADMIN_EMAIL` y `BOOTSTRAP_ADMIN_PASSWORD`. La contraseña únicamente
+se usa al crear la cuenta por primera vez; desplegar nuevamente no restablece
+una contraseña que haya sido cambiada.
 
 Ejemplo de login:
 
@@ -193,6 +196,103 @@ php artisan db:seed --class=ProfileSeeder
 ```
 
 La creación, edición y eliminación de perfiles también se registra en `audit_logs`, incluyendo las secciones anteriores y nuevas.
+
+## Audit Logs
+
+Las rutas requieren un token Bearer y acceso a la sección `audit-logs`:
+
+- `GET /api/audit-logs`: bitácora paginada con `search`, `action`, `auditable_type`, `date_from` y `date_to`.
+- `GET /api/audit-logs/{id}`: detalle inmutable con valores anteriores y nuevos.
+- `GET /api/audit-logs/export/pdf`: exportación PDF con los filtros activos.
+- `GET /api/audit-logs/export/excel`: exportación Excel con los filtros activos.
+
+La bitácora es de solo lectura. El perfil Administrador recibe esta sección mediante `ProfileSeeder` y el catálogo la registra como una sección del sistema mediante `SectionSeeder`.
+
+## Deploy en Railway
+
+Railway detecta Laravel mediante Railpack y ejecuta la API con FrankenPHP. La
+aplicación usa MongoDB Atlas, por lo que no necesita un servicio de base de
+datos dentro de Railway ni workers adicionales: las colas se procesan con
+`QUEUE_CONNECTION=sync`.
+
+### Variables obligatorias
+
+Configura estas variables desde **Railway > Service > Variables**. No subas el
+archivo `.env` al repositorio.
+
+```dotenv
+APP_NAME="TAP Admission API"
+APP_ENV=production
+APP_KEY=base64:REEMPLAZAR_CON_UNA_CLAVE_GENERADA
+APP_DEBUG=false
+APP_TIMEZONE=America/Mexico_City
+APP_URL=https://TU-SERVICIO.up.railway.app
+FRONTEND_URL=https://TU-FRONTEND
+
+DB_CONNECTION=mongodb
+DB_URI=mongodb+srv://USUARIO:PASSWORD@CLUSTER/...
+DB_DATABASE=tap_admission
+
+BOOTSTRAP_ADMIN_NAME=Administrador
+BOOTSTRAP_ADMIN_EMAIL=admin@tu-dominio.com
+BOOTSTRAP_ADMIN_PASSWORD=CAMBIAR_POR_UNA_PASSWORD_SEGURA
+
+CACHE_STORE=file
+SESSION_DRIVER=file
+QUEUE_CONNECTION=sync
+FILESYSTEM_DISK=public
+
+LOG_CHANNEL=stderr
+LOG_LEVEL=info
+L5_SWAGGER_ENABLED=false
+RAILPACK_SKIP_MIGRATIONS=true
+
+MAIL_MAILER=smtp
+MAIL_SCHEME=null
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=tu-correo@gmail.com
+MAIL_PASSWORD=TU_PASSWORD_DE_APLICACION
+MAIL_FROM_ADDRESS=tu-correo@gmail.com
+MAIL_FROM_NAME="TAP Admission"
+```
+
+Genera `APP_KEY` localmente con `php artisan key:generate --show`. Agrega
+las credenciales de Gmail mostradas arriba. La contraseña de aplicación de
+Google debe permanecer únicamente en Railway y escribirse sin espacios.
+
+### Configuración del servicio
+
+1. Conecta este repositorio desde **Deploy from GitHub repo**.
+2. En **Deploy > Pre-Deploy Command**, configura:
+
+   ```bash
+   php artisan db:seed --class=DatabaseSeeder --force
+   ```
+
+   El seed es idempotente: crea o actualiza las cuatro secciones, los tres
+   perfiles base y crea el administrador únicamente la primera vez.
+3. En **Deploy > Healthcheck Path**, configura `/up`.
+4. En **Networking**, selecciona **Generate Domain** y coloca ese dominio en
+   `APP_URL` sin una barra final.
+5. Activa **Wait for CI** en los despliegues desde GitHub. El workflow
+   `.github/workflows/ci.yml` valida Composer, formato, OpenAPI y toda la suite
+   contra MongoDB antes de permitir el deploy.
+
+Railpack crea automáticamente el enlace de `public/storage`. Sin embargo, el
+sistema de archivos de Railway es efímero: si deben conservarse las fotos de
+productos y usuarios entre despliegues, agrega un volumen montado en
+`/app/storage/app/public`. MongoDB Atlas no se ve afectado por esta condición.
+
+### Verificación después del deploy
+
+```bash
+curl --fail https://TU-SERVICIO.up.railway.app/up
+curl --fail https://TU-SERVICIO.up.railway.app/api/health
+```
+
+Después inicia sesión con `BOOTSTRAP_ADMIN_EMAIL` y la contraseña inicial. El
+frontend debe utilizar `https://TU-SERVICIO.up.railway.app/api` como URL base.
 
 ## Contributing
 

@@ -22,8 +22,12 @@
         <env name="APP_KEY" value="base64:MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=" force="true"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
+        <env name="BOOTSTRAP_ADMIN_NAME" value="Administrador de pruebas" force="true"/>
+        <env name="BOOTSTRAP_ADMIN_EMAIL" value="bootstrap-admin@example.test" force="true"/>
+        <env name="BOOTSTRAP_ADMIN_PASSWORD" value="BootstrapAdmin123!" force="true"/>
         <env name="CACHE_STORE" value="array"/>
         <env name="DB_CONNECTION" value="mongodb" force="true"/>
+        <env name="DB_URI" value="mongodb://127.0.0.1:27017" force="true"/>
         <env name="DB_DATABASE" value="products_crud_test_testing" force="true"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>

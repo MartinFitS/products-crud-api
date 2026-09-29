@@ -16,4 +16,16 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_railway_healthcheck_is_available(): void
+    {
+        $this->get('/up')->assertOk();
+    }
+
+    public function test_api_health_endpoint_is_available(): void
+    {
+        $this->getJson('/api/health')
+            ->assertOk()
+            ->assertJsonPath('success', true);
+    }
 }

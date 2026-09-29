@@ -13,6 +13,7 @@ class SectionSeeder extends Seeder
             ['code' => 'SEC-000001', 'name' => 'Productos', 'slug' => 'products'],
             ['code' => 'SEC-000002', 'name' => 'Usuarios', 'slug' => 'users'],
             ['code' => 'SEC-000003', 'name' => 'Perfiles', 'slug' => 'profiles'],
+            ['code' => 'SEC-000004', 'name' => 'Bitácora', 'slug' => 'audit-logs'],
         ];
 
         foreach ($sections as $section) {

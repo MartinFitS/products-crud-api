@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\ProductController;
@@ -69,4 +70,14 @@ Route::prefix('products')
         Route::put('/{id}', 'update');
         Route::post('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
+    });
+
+Route::prefix('audit-logs')
+    ->middleware(['auth:sanctum', 'section:audit-logs'])
+    ->controller(AuditLogController::class)
+    ->group(function () {
+        Route::get('/', 'index');
+        Route::get('/export/pdf', 'exportPdf');
+        Route::get('/export/excel', 'exportExcel');
+        Route::get('/{id}', 'show');
     });

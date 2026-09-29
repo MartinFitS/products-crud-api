@@ -5,5 +5,6 @@ return [
         'products',
         'users',
         'profiles',
+        'audit-logs',
     ],
 ];

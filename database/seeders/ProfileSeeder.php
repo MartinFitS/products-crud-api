@@ -13,7 +13,7 @@ class ProfileSeeder extends Seeder
             [
                 'code' => 'PRF-000001',
                 'name' => 'Administrador',
-                'sections' => ['products', 'users', 'profiles'],
+                'sections' => ['products', 'users', 'profiles', 'audit-logs'],
             ],
             [
                 'code' => 'PRF-000002',
