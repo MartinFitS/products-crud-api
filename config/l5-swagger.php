@@ -14,7 +14,7 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'TAP Admission API',
+                'title' => 'Products API',
             ],
 
             'routes' => [
