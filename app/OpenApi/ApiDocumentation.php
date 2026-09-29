@@ -6,7 +6,7 @@ use OpenApi\Attributes as OA;
 
 #[OA\Info(
     version: '1.0.0',
-    title: 'TAP Admission API',
+    title: 'Api apra el examen de admision a TAP',
     description: 'API REST del examen técnico TAP Admission.'
 )]
 #[OA\Server(url: '/', description: 'API')]

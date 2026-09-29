@@ -221,7 +221,7 @@ Configura estas variables desde **Railway > Service > Variables**. No subas el
 archivo `.env` al repositorio.
 
 ```dotenv
-APP_NAME="TAP Admission API"
+APP_NAME="Api apra el examen de admision a TAP"
 APP_ENV=production
 APP_KEY=base64:REEMPLAZAR_CON_UNA_CLAVE_GENERADA
 APP_DEBUG=false
